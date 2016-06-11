@@ -1,6 +1,7 @@
 package com.example.user.autorate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 
 
 public class AutoServiceFragment extends Fragment {
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RecyclerView autoServiceRecycler = (RecyclerView)inflater.inflate(R.layout.fragment_auto, container,false);
@@ -34,6 +34,14 @@ public class AutoServiceFragment extends Fragment {
         autoServiceRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         autoServiceRecycler.setLayoutManager(layoutManager);
+        adapter.setListener(new CaptionedImageAdapter.Listener() {
+            @Override
+            public void onClick(int position) {
+                Intent intent = new Intent(getActivity(), AutoServiceDetailActivity.class);
+                intent.putExtra(AutoServiceDetailActivity.EXTRA_SERVICENO, position);
+                getActivity().startActivity(intent);
+            }
+        });
         return autoServiceRecycler;
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.user.autorate">
+
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application
@@ -19,6 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".AutoServiceDetailActivity"
+            android:label="@string/title_activity_auto_service_detail"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

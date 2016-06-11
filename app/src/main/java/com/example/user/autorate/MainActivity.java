@@ -21,6 +21,12 @@ public class MainActivity extends Activity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Fragment fragment = new AutoServiceFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.frame_container, fragment, "visible_fragment");
+        ft.addToBackStack(null);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
     }
 
     @Override

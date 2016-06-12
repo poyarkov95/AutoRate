@@ -16,9 +16,9 @@ public class AutoServiceInfo {
         this.location = location;
     }
 
-    public static final AutoServiceInfo[] autoServices = { new AutoServiceInfo("Auto-color","Auto service with color",R.drawable.autocolor,"geo:56.247915, 43.418788"),
-                                                           new AutoServiceInfo("Auto-servis","Service servis bla vtoroy servis",R.drawable.autoserv,"geo:56.245883, 43.427562"),
-                                                           new AutoServiceInfo("Dils-auto","Servis dils bla bla",R.drawable.dilsauto,"geo:56.242578, 43.407931")};
+    public static final AutoServiceInfo[] autoServices = { new AutoServiceInfo("Auto-color","Auto service with color",R.drawable.autocolor,"56.247915, 43.418788"),
+                                                           new AutoServiceInfo("Auto-servis","Service servis bla vtoroy servis",R.drawable.autoserv,"56.245883, 43.427562"),
+                                                           new AutoServiceInfo("Dils-auto","Servis dils bla bla",R.drawable.dilsauto,"56.242578, 43.407931")};
 
     public String getName() {
         return name;

@@ -43,13 +43,6 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
         imageView.setContentDescription(pizzaName);
 
         geoLocation = AutoServiceInfo.autoServices[autoServiceNo].getLocation().toString();
-
-
-
-        //Меню пока не трогал
-
-
-
     }
 
     @Override
@@ -57,12 +50,16 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
 
         switch(v.getId()){
             case R.id.mapButton:
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(geoLocation));
+                String url = "http://maps.google.com/maps?daddr=" + geoLocation;
+                Intent intent = new Intent(Intent.ACTION_VIEW,  Uri.parse(url));
+
+
                 startActivity(intent);//студия пишет, что активность не может перехватить интент для открытия картыю:
                 //No Activity found to handle Intent { act=android.intent.action.VIEW dat=geo:56.247915, 43.418788 }
                 break;
+
+
+
         }
     }
 }

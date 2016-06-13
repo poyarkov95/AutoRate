@@ -19,8 +19,28 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"/>
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/mapButton"/>
+        android:id="@+id/mapButton"
+        android:text="Смотреть на карте"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/webButton"
+        android:text="Посетить сайт"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/servicesButton"
+        android:text="Услуги"
+        />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewPrise"/>
+
 
 </LinearLayout>

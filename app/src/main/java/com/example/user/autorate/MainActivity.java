@@ -14,19 +14,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
-public class MainActivity extends Activity  {
+public class MainActivity extends Activity  implements View.OnClickListener {
     Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Fragment fragment = new AutoServiceFragment();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_container, fragment, "visible_fragment");
-        ft.addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+        button = (Button)findViewById(R.id.servicesButton);
+        button.setOnClickListener(this);
     }
 
     @Override
@@ -52,4 +48,19 @@ public class MainActivity extends Activity  {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.servicesButton:
+                Fragment fragment = new AutoServiceFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.frame_container, fragment, "visible_fragment");
+                ft.addToBackStack(null);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.commit();
+                break;
+            default:
+                break;
+        }
+    }
 }

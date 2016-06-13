@@ -81,14 +81,14 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
 
 
 
-        String pizzaName = AutoServiceInfo.autoServices[autoServiceNo].getName();
+        String serviceName = AutoServiceInfo.autoServices[autoServiceNo].getName();
         final TextView textView = (TextView)findViewById(R.id.autoServiceDetail_text);
-        textView.setText(pizzaName);
+        textView.setText(serviceName);
 
-        int pizzaImage = AutoServiceInfo.autoServices[autoServiceNo].getImageResourceId();
+        int serviceImage = AutoServiceInfo.autoServices[autoServiceNo].getImageResourceId();
         ImageView imageView = (ImageView)findViewById(R.id.detail_image);
-        imageView.setImageDrawable(getResources().getDrawable(pizzaImage));//тут может быть затык
-        imageView.setContentDescription(pizzaName);
+        imageView.setImageDrawable(getResources().getDrawable(serviceImage));//тут может быть затык
+        imageView.setContentDescription(serviceName);
 
 
 

@@ -20,7 +20,7 @@ import java.util.List;
 
 public class AutoServiceDetailActivity extends Activity implements View.OnClickListener{
 
-    public static final String EXTRA_SERVICENO = "pizzaNo";
+    public static final String EXTRA_SERVICE_NO = "serviceNo";
     Button button;
     String geoLocation;
     String tableName;
@@ -31,9 +31,7 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
 
     Button servicesButton;
 
-
-    //Work with DataBase
-    private Cursor cursor;
+    int autoServiceNo;
     private SimpleCursorAdapter cursorAdapter;
     private ListView listView;
 
@@ -41,11 +39,20 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto_service_detail);
+        Bundle bundle= getIntent().getExtras();
+        if(bundle != null){
+            Object o = bundle.get(EXTRA_SERVICE_NO);
+            autoServiceNo = (Integer.parseInt(String.valueOf(o)));
+        }
 
 
+
+        geoLocation = AutoServiceInfo.autoServices[autoServiceNo].getLocation();
+        webAddress = AutoServiceInfo.autoServices[autoServiceNo].getWebAddress();
+        tableName = AutoServiceInfo.autoServices[autoServiceNo].getName();
 
         button = (Button)findViewById(R.id.mapButton);
         button.setOnClickListener(this);
@@ -56,21 +63,13 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
         servicesButton = (Button)findViewById(R.id.servicesButton);
         servicesButton.setOnClickListener(this);
 
-        int autoServiceNo = (Integer)getIntent().getExtras().get(EXTRA_SERVICENO);
-        geoLocation = AutoServiceInfo.autoServices[autoServiceNo].getLocation().toString();
-        webAddress = AutoServiceInfo.autoServices[autoServiceNo].getWebAddress().toString();
-        //У меня имеется имя для таблицы из класса AutoServiceInfo.java
-        //Как мне его использовать, чтобы выводить информацию в ListView из нужной базы данных?
-        //Я не могу понять за что уцепиться с этим tableName
-        tableName = AutoServiceInfo.autoServices[autoServiceNo].getName().toString();
-
 
         //Initialize dataBase
 
-        MyDataBase dataBase = new MyDataBase(this);
-        cursor = dataBase.getAllItems();
+        dataBase = new MyDataBase(this);
+        Cursor cursor = dataBase.getAllItems();
 
-        String[]from = new String[]{MyDataBase.NAME, MyDataBase.DESCRIPTION, MyDataBase.PRICE};
+        String[]from = new String[]{MyDataBase.NAME,MyDataBase.DESCRIPTION,MyDataBase.PRICE};
         int[] to = new int[]{R.id.tvName, R.id.tvDescription, R.id.tvPrise};
 
 
@@ -78,20 +77,14 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
         listView = (ListView)findViewById(R.id.listViewPrise);
 
 
+        String pizzaName = AutoServiceInfo.autoServices[autoServiceNo].getName();
+        TextView textView = (TextView)findViewById(R.id.autoServiceDetail_text);
+        textView.setText(pizzaName);
 
-
-
-        String serviceName = AutoServiceInfo.autoServices[autoServiceNo].getName();
-        final TextView textView = (TextView)findViewById(R.id.autoServiceDetail_text);
-        textView.setText(serviceName);
-
-        int serviceImage = AutoServiceInfo.autoServices[autoServiceNo].getImageResourceId();
+        int pizzaImage = AutoServiceInfo.autoServices[autoServiceNo].getImageResourceId();
         ImageView imageView = (ImageView)findViewById(R.id.detail_image);
-        imageView.setImageDrawable(getResources().getDrawable(serviceImage));//тут может быть затык
-        imageView.setContentDescription(serviceName);
-
-
-
+        imageView.setImageDrawable(getResources().getDrawable(pizzaImage));//тут может быть затык
+        imageView.setContentDescription(pizzaName);
 
 
 
@@ -115,6 +108,7 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
                 break;
             default:
                 dataBase.close();
+                break;
         }
     }
 }

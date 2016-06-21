@@ -38,7 +38,7 @@ public class AutoServiceFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 Intent intent = new Intent(getActivity(), AutoServiceDetailActivity.class);
-                intent.putExtra(AutoServiceDetailActivity.EXTRA_SERVICENO, position);
+                intent.putExtra(AutoServiceDetailActivity.EXTRA_SERVICE_NO, position);
                 getActivity().startActivity(intent);
             }
         });

@@ -26,16 +26,17 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
     String tableName;
 
 
+    String callNumber;
+    Button callButton;
+
     Button webButton;
     String webAddress;
 
     Button servicesButton;
 
     int autoServiceNo;
-    private SimpleCursorAdapter cursorAdapter;
-    private ListView listView;
-
-    private MyDataBase dataBase;
+    MyDataBase dataBase;
+    Cursor cursor;
 
 
     @Override
@@ -53,6 +54,7 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
         geoLocation = AutoServiceInfo.autoServices[autoServiceNo].getLocation();
         webAddress = AutoServiceInfo.autoServices[autoServiceNo].getWebAddress();
         tableName = AutoServiceInfo.autoServices[autoServiceNo].getName();
+        callNumber = AutoServiceInfo.autoServices[autoServiceNo].getCallNumber();
 
         button = (Button)findViewById(R.id.mapButton);
         button.setOnClickListener(this);
@@ -63,18 +65,14 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
         servicesButton = (Button)findViewById(R.id.servicesButton);
         servicesButton.setOnClickListener(this);
 
+        callButton = (Button)findViewById(R.id.callButton);
+        callButton.setOnClickListener(this);
 
         //Initialize dataBase
 
-        dataBase = new MyDataBase(this);
-        Cursor cursor = dataBase.getAllItems();
-
-        String[]from = new String[]{MyDataBase.NAME,MyDataBase.DESCRIPTION,MyDataBase.PRICE};
-        int[] to = new int[]{R.id.tvName, R.id.tvDescription, R.id.tvPrise};
 
 
-        cursorAdapter = new SimpleCursorAdapter(this, R.layout.item, cursor, from, to,0);
-        listView = (ListView)findViewById(R.id.listViewPrise);
+
 
 
         String pizzaName = AutoServiceInfo.autoServices[autoServiceNo].getName();
@@ -85,9 +83,6 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
         ImageView imageView = (ImageView)findViewById(R.id.detail_image);
         imageView.setImageDrawable(getResources().getDrawable(pizzaImage));//тут может быть затык
         imageView.setContentDescription(pizzaName);
-
-
-
     }
 
     @Override
@@ -104,7 +99,18 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
                 startActivity(intent);
                 break;
             case R.id.servicesButton:
+                dataBase = new MyDataBase(this);
+                cursor = dataBase.getAllItems(tableName);
+                String[]from = new String[]{MyDataBase.NAME,MyDataBase.DESCRIPTION,MyDataBase.PRICE};
+                int[] to = new int[]{R.id.tvName, R.id.tvDescription, R.id.tvPrise};
+                SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(this, R.layout.item, cursor, from, to, 0);
+                ListView listView = (ListView) findViewById(R.id.listViewPrise);
                 listView.setAdapter(cursorAdapter);
+                break;
+            case R.id.callButton:
+                intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+callNumber));
+                startActivity(intent);
                 break;
             default:
                 dataBase.close();

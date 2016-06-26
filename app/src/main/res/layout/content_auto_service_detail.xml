@@ -36,6 +36,12 @@
         android:id="@+id/servicesButton"
         android:text="Услуги"
         />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/callButton"
+        android:text="Сделать звонок"
+        />
 
     <ListView
         android:layout_width="match_parent"

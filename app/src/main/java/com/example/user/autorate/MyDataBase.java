@@ -16,6 +16,7 @@ public class MyDataBase {
 
     private static final String DB_NAME = "AutoRate";
     private static final String TABLE_NAME = "AUTOCOLOR";
+    private static final String SECOND_TABLE_NAME = "AUTORATE";
 
     public static final String NAME = "NAME";
     public static final String DESCRIPTION = "DESCRIPTION";
@@ -27,13 +28,11 @@ public class MyDataBase {
     public MyDataBase(Context context) {
         dbOpenHelper = new DBOpenHelper(context);
     }
-    public String getDataBaseName(){
-        return TABLE_NAME;
-    }
 
-    public Cursor getAllItems() {
+
+    public Cursor getAllItems(String tableName) {
         database = dbOpenHelper.getReadableDatabase();
-        return database.query(TABLE_NAME, null, null, null, null, null, null);
+        return database.query(tableName, null, null, null, null, null, null);
     }
 
     public void close() {
@@ -42,14 +41,21 @@ public class MyDataBase {
     }
     public class DBOpenHelper extends SQLiteOpenHelper {
 
-
-
         public DBOpenHelper(Context context) {
             super(context, DB_NAME, null, DB_VERSION);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+
+            db.execSQL("CREATE TABLE " + SECOND_TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + NAME + " TEXT, "
+                    + DESCRIPTION + " TEXT, "
+                    + PRICE + " INTEGER) ;");
+            insertService(db, "AUTORATE", "Шиномонтаж", "Замена четырех колес", 5000);
+            insertService(db, "AUTORATE", "Кузовные работы", "Замена чего то там", 12000);
+            insertService(db, "AUTORATE", "Диагностика", "Продиагностировать чего-нибудь", 4000);
+
             db.execSQL("CREATE TABLE " + TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + NAME + " TEXT, "
                     + DESCRIPTION + " TEXT, "
@@ -57,6 +63,7 @@ public class MyDataBase {
             insertService(db, "AUTOCOLOR", "Шиномонтаж", "Замена четырех колес", 4000);
             insertService(db, "AUTOCOLOR", "Кузовные работы", "Замена чего то там", 10000);
             insertService(db, "AUTOCOLOR", "Диагностика", "Продиагностировать чего-нибудь", 3000);
+
 
 
         }

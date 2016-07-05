@@ -27,8 +27,8 @@ public class CaptionedImageAdapter extends RecyclerView.Adapter<CaptionedImageAd
         this.imageIds = imageIds;
     }
 
-    public static interface Listener{
-        public void onClick(int position);
+    public interface Listener{
+        void onClick(int position);
     }
 
     public void setListener(Listener listener){
@@ -60,8 +60,6 @@ public class CaptionedImageAdapter extends RecyclerView.Adapter<CaptionedImageAd
                 }
             }
         });
-
-
     }
 
     @Override

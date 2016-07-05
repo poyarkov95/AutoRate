@@ -33,15 +33,20 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/servicesButton"
-        android:text="Услуги"
+        android:id="@+id/callButton"
+        android:text="Сделать звонок"
         />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/callButton"
-        android:text="Сделать звонок"
-        />
+        android:text="Просмотреть все услуги"
+        android:id="@+id/servicesButton"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"></Spinner>
+
 
     <ListView
         android:layout_width="match_parent"

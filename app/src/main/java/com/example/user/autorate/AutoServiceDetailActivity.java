@@ -2,21 +2,19 @@ package com.example.user.autorate;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ShareActionProvider;
-
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.util.List;
-
+import android.widget.Toast;
 
 public class AutoServiceDetailActivity extends Activity implements View.OnClickListener{
 
@@ -33,10 +31,18 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
     String webAddress;
 
     Button servicesButton;
-
     int autoServiceNo;
     MyDataBase dataBase;
     Cursor cursor;
+
+    String[] data = {"Выберите услугу", "Шиномонтаж","Кузовные работы","Диагностика"};
+    Spinner spinner;
+
+    SimpleCursorAdapter cursorAdapter;
+
+    String[] from;
+    int[] to;
+    ListView listView;
 
 
     @Override
@@ -48,14 +54,7 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
             Object o = bundle.get(EXTRA_SERVICE_NO);
             autoServiceNo = (Integer.parseInt(String.valueOf(o)));
         }
-
-
-
-        geoLocation = AutoServiceInfo.autoServices[autoServiceNo].getLocation();
-        webAddress = AutoServiceInfo.autoServices[autoServiceNo].getWebAddress();
-        tableName = AutoServiceInfo.autoServices[autoServiceNo].getName();
-        callNumber = AutoServiceInfo.autoServices[autoServiceNo].getCallNumber();
-
+        //all buttons
         button = (Button)findViewById(R.id.mapButton);
         button.setOnClickListener(this);
 
@@ -68,12 +67,11 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
         callButton = (Button)findViewById(R.id.callButton);
         callButton.setOnClickListener(this);
 
-        //Initialize dataBase
-
-
-
-
-
+        //data from information class for CardView
+        geoLocation = AutoServiceInfo.autoServices[autoServiceNo].getLocation();
+        webAddress = AutoServiceInfo.autoServices[autoServiceNo].getWebAddress();
+        tableName = AutoServiceInfo.autoServices[autoServiceNo].getName();
+        callNumber = AutoServiceInfo.autoServices[autoServiceNo].getCallNumber();
 
         String pizzaName = AutoServiceInfo.autoServices[autoServiceNo].getName();
         TextView textView = (TextView)findViewById(R.id.autoServiceDetail_text);
@@ -81,8 +79,53 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
 
         int pizzaImage = AutoServiceInfo.autoServices[autoServiceNo].getImageResourceId();
         ImageView imageView = (ImageView)findViewById(R.id.detail_image);
-        imageView.setImageDrawable(getResources().getDrawable(pizzaImage));//тут может быть затык
+        imageView.setImageDrawable(getResources().getDrawable(pizzaImage));
         imageView.setContentDescription(pizzaName);
+
+        //database
+        dataBase = new MyDataBase(this);
+        from = new String[]{MyDataBase.NAME,MyDataBase.DESCRIPTION,MyDataBase.PRICE};
+        to = new int[]{R.id.tvName, R.id.tvDescription, R.id.tvPrise};
+
+
+
+
+        //Object spinner
+        ArrayAdapter<String>adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,data);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner = (Spinner)findViewById(R.id.spinner);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (spinner.getSelectedItem().toString()){
+                    case "Выберите услугу":
+                        break;
+                    case "Шиномонтаж":
+                        cursor = dataBase.getTireItems(tableName);
+                        cursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.item, cursor, from, to, 0);
+                        listView = (ListView) findViewById(R.id.listViewPrise);
+                        listView.setAdapter(cursorAdapter);
+                        break;
+                    case "Кузовные работы":
+                        cursor = dataBase.getBodyItems(tableName);
+                        cursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.item, cursor, from, to, 0);
+                        listView = (ListView) findViewById(R.id.listViewPrise);
+                        listView.setAdapter(cursorAdapter);
+                        break;
+                    case "Диагностика":
+                        cursor = dataBase.getDiagnostic(tableName);
+                        cursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.item, cursor, from, to, 0);
+                        listView = (ListView) findViewById(R.id.listViewPrise);
+                        listView.setAdapter(cursorAdapter);
+                        break;
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     @Override
@@ -101,10 +144,8 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
             case R.id.servicesButton:
                 dataBase = new MyDataBase(this);
                 cursor = dataBase.getAllItems(tableName);
-                String[]from = new String[]{MyDataBase.NAME,MyDataBase.DESCRIPTION,MyDataBase.PRICE};
-                int[] to = new int[]{R.id.tvName, R.id.tvDescription, R.id.tvPrise};
-                SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(this, R.layout.item, cursor, from, to, 0);
-                ListView listView = (ListView) findViewById(R.id.listViewPrise);
+                cursorAdapter = new SimpleCursorAdapter(this, R.layout.item, cursor, from, to, 0);
+                listView = (ListView) findViewById(R.id.listViewPrise);
                 listView.setAdapter(cursorAdapter);
                 break;
             case R.id.callButton:

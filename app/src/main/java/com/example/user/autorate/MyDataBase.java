@@ -17,6 +17,7 @@ public class MyDataBase {
     private static final String DB_NAME = "AutoRate";
     private static final String TABLE_NAME = "AUTOCOLOR";
     private static final String SECOND_TABLE_NAME = "AUTORATE";
+    private static final String THIRD_TABLE_NAME = "DILSAUTO";
 
     public static final String NAME = "NAME";
     public static final String DESCRIPTION = "DESCRIPTION";
@@ -24,6 +25,8 @@ public class MyDataBase {
 
 
     private static final int DB_VERSION = 1;
+    //database fields
+    String[] columns;
 
     public MyDataBase(Context context) {
         dbOpenHelper = new DBOpenHelper(context);
@@ -33,6 +36,23 @@ public class MyDataBase {
     public Cursor getAllItems(String tableName) {
         database = dbOpenHelper.getReadableDatabase();
         return database.query(tableName, null, null, null, null, null, null);
+    }
+    public Cursor getTireItems(String tableName) {
+        columns = new String[]{"_id","NAME","DESCRIPTION","PRICE"};
+        database = dbOpenHelper.getReadableDatabase();
+        return database.query(tableName, columns, "NAME = ?", new String[]{"Шиномонтаж"}, null, null, null);
+    }
+
+    public Cursor getBodyItems(String tableName){
+        columns = new String[]{"_id","NAME","DESCRIPTION","PRICE"};
+        database = dbOpenHelper.getReadableDatabase();
+        return database.query(tableName, columns, "NAME = ?", new String[]{"Кузовные работы"}, null, null, null);
+    }
+
+    public Cursor getDiagnostic(String tableName){
+        columns = new String[]{"_id","NAME","DESCRIPTION","PRICE"};
+        database = dbOpenHelper.getReadableDatabase();
+        return database.query(tableName, columns, "NAME = ?", new String[]{"Диагностика"}, null, null, null);
     }
 
     public void close() {
@@ -64,13 +84,17 @@ public class MyDataBase {
             insertService(db, "AUTOCOLOR", "Кузовные работы", "Замена чего то там", 10000);
             insertService(db, "AUTOCOLOR", "Диагностика", "Продиагностировать чего-нибудь", 3000);
 
-
-
+            db.execSQL("CREATE TABLE " + THIRD_TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + NAME + " TEXT, "
+                    + DESCRIPTION + " TEXT, "
+                    + PRICE + " INTEGER) ;");
+            insertService(db, "DILSAUTO", "Шиномонтаж", "Замена четырех колес", 18000);
+            insertService(db, "DILSAUTO", "Кузовные работы", "Замена чего то там", 1337228);
+            insertService(db, "DILSAUTO", "Диагностика", "Продиагностировать чего-нибудь", 3000);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
         }
 
         private void insertService(SQLiteDatabase db, String currentDataBaseName, String name, String description, int price) {

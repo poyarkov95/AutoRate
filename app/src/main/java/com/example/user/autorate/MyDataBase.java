@@ -54,6 +54,21 @@ public class MyDataBase {
         database = dbOpenHelper.getReadableDatabase();
         return database.query(tableName, columns, "NAME = ?", new String[]{"Диагностика"}, null, null, null);
     }
+    public void updateDB(String s){
+        String name = "";
+        String service = "";
+        String discount = "";
+        String[]line = s.split(" ");
+        for(int i = 0; i < line.length; i++){
+            name = line[0];
+            service = line[1];
+            discount = line[2];
+        }
+        database = dbOpenHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("PRICE",String.valueOf(discount));
+        database.update(name,contentValues,"NAME = ?",new String[]{service});
+    }
 
     public void close() {
         if (dbOpenHelper != null) dbOpenHelper.close();
@@ -67,7 +82,6 @@ public class MyDataBase {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-
             db.execSQL("CREATE TABLE " + SECOND_TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + NAME + " TEXT, "
                     + DESCRIPTION + " TEXT, "
@@ -75,6 +89,7 @@ public class MyDataBase {
             insertService(db, "AUTORATE", "Шиномонтаж", "Замена четырех колес", 5000);
             insertService(db, "AUTORATE", "Кузовные работы", "Замена чего то там", 12000);
             insertService(db, "AUTORATE", "Диагностика", "Продиагностировать чего-нибудь", 4000);
+
 
             db.execSQL("CREATE TABLE " + TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + NAME + " TEXT, "

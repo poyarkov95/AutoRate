@@ -18,13 +18,18 @@
         android:text="Автосервисы"
         android:id="@+id/servicesButton"/>
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/frame_container">
-    </FrameLayout>
-
+        android:id="@+id/frame_container"></FrameLayout>
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:background="?android:attr/colorPrimary"
+        />
 
 </RelativeLayout>
 </ScrollView>

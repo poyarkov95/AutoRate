@@ -103,6 +103,9 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
                     case "Выберите услугу":
                         break;
                     case "Шиномонтаж":
+                        Intent intent = new Intent(getBaseContext(),ServiceDetailActivity.class);
+                        intent.putExtra(ServiceDetailActivity.SERVICE_NAME,tableName);
+                        startActivity(intent);
                         cursor = dataBase.getTireItems(tableName);
                         cursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.item, cursor, from, to, 0);
                         listView = (ListView) findViewById(R.id.listViewPrise);

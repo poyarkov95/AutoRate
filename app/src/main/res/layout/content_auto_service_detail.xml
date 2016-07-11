@@ -8,6 +8,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.user.autorate.AutoServiceDetailActivity"
     tools:showIn="@layout/activity_auto_service_detail">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +46,8 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"></Spinner>
+        android:id="@+id/spinner">
+    </Spinner>
 
 
     <ListView

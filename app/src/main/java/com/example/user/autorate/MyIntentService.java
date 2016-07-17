@@ -32,6 +32,7 @@ public class MyIntentService extends IntentService {
     }
 
     private void showText(final String text) {
+        String message = text.replace("#"," ");
         Intent intent = new Intent(this, MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
@@ -45,7 +46,7 @@ public class MyIntentService extends IntentService {
                 .setPriority(Notification.PRIORITY_MAX)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(pendingIntent)
-                .setContentText(text)
+                .setContentText(message)
                 .build();
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATION_ID,notification);

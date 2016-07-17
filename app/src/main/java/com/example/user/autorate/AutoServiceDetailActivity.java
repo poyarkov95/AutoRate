@@ -1,6 +1,7 @@
 package com.example.user.autorate;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,12 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class AutoServiceDetailActivity extends Activity implements View.OnClickListener{
 
@@ -38,17 +36,17 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
     String[] data = {"Выберите услугу", "Шиномонтаж","Кузовные работы","Диагностика"};
     Spinner spinner;
 
-    SimpleCursorAdapter cursorAdapter;
 
     String[] from;
     int[] to;
-    ListView listView;
+    ArrayAdapter<String>adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto_service_detail);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Bundle bundle= getIntent().getExtras();
         if(bundle != null){
             Object o = bundle.get(EXTRA_SERVICE_NO);
@@ -87,42 +85,39 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
         from = new String[]{MyDataBase.NAME,MyDataBase.DESCRIPTION,MyDataBase.PRICE};
         to = new int[]{R.id.tvName, R.id.tvDescription, R.id.tvPrise};
 
-
-
-
         //Object spinner
-        ArrayAdapter<String>adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,data);
+        adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,data);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent;
                 switch (spinner.getSelectedItem().toString()){
                     case "Выберите услугу":
                         break;
                     case "Шиномонтаж":
-                        Intent intent = new Intent(getBaseContext(),ServiceDetailActivity.class);
+                        intent = new Intent(getBaseContext(),ServiceDetailActivity.class);
                         intent.putExtra(ServiceDetailActivity.SERVICE_NAME,tableName);
+                        intent.putExtra(ServiceDetailActivity.SERVICE_SERVICE, spinner.getSelectedItem().toString());
                         startActivity(intent);
-                        cursor = dataBase.getTireItems(tableName);
-                        cursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.item, cursor, from, to, 0);
-                        listView = (ListView) findViewById(R.id.listViewPrise);
-                        listView.setAdapter(cursorAdapter);
                         break;
                     case "Кузовные работы":
-                        cursor = dataBase.getBodyItems(tableName);
-                        cursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.item, cursor, from, to, 0);
-                        listView = (ListView) findViewById(R.id.listViewPrise);
-                        listView.setAdapter(cursorAdapter);
+                        intent = new Intent(getBaseContext(),ServiceDetailActivity.class);
+                        intent.putExtra(ServiceDetailActivity.SERVICE_NAME,tableName);
+                        intent.putExtra(ServiceDetailActivity.SERVICE_SERVICE, spinner.getSelectedItem().toString());
+                        startActivity(intent);
                         break;
                     case "Диагностика":
-                        cursor = dataBase.getDiagnostic(tableName);
-                        cursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.item, cursor, from, to, 0);
-                        listView = (ListView) findViewById(R.id.listViewPrise);
-                        listView.setAdapter(cursorAdapter);
+                        intent = new Intent(getBaseContext(),ServiceDetailActivity.class);
+                        intent.putExtra(ServiceDetailActivity.SERVICE_NAME,tableName);
+                        intent.putExtra(ServiceDetailActivity.SERVICE_SERVICE, spinner.getSelectedItem().toString());
+                        startActivity(intent);
                         break;
+                    default:
+                        dataBase.close();
+                        cursor.close();
                 }
             }
             @Override
@@ -145,11 +140,10 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
                 startActivity(intent);
                 break;
             case R.id.servicesButton:
-                dataBase = new MyDataBase(this);
-                cursor = dataBase.getAllItems(tableName);
-                cursorAdapter = new SimpleCursorAdapter(this, R.layout.item, cursor, from, to, 0);
-                listView = (ListView) findViewById(R.id.listViewPrise);
-                listView.setAdapter(cursorAdapter);
+                intent = new Intent(getBaseContext(), ServiceDetailActivity.class);
+                intent.putExtra(ServiceDetailActivity.SERVICE_NAME, tableName);
+                intent.putExtra(ServiceDetailActivity.SERVICE_SERVICE,servicesButton.getText());
+                startActivity(intent);
                 break;
             case R.id.callButton:
                 intent = new Intent(Intent.ACTION_DIAL);
@@ -158,6 +152,7 @@ public class AutoServiceDetailActivity extends Activity implements View.OnClickL
                 break;
             default:
                 dataBase.close();
+                cursor.close();
                 break;
         }
     }

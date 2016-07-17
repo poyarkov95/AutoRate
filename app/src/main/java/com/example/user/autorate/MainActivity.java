@@ -1,14 +1,11 @@
 package com.example.user.autorate;
+//TODO: disable the divice revolution.
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,15 +13,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.TextView;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-public class MainActivity extends Activity  implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button button;
     //Network connection
@@ -41,12 +36,11 @@ public class MainActivity extends Activity  implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         button = (Button)findViewById(R.id.servicesButton);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         button.setOnClickListener(this);
-
         new Thread() {
             @Override
             public void run() {
-
                 try {
                     //connecting
                     Log.e(debuggingString, "Attempting to connect to server");
@@ -60,18 +54,15 @@ public class MainActivity extends Activity  implements View.OnClickListener {
 
                     //Receive message from server
                     bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String s = bufferedReader.readLine();
-                    updateDiscount(s);
-                    MyDataBase dataBase = new MyDataBase(getBaseContext());
-                    dataBase.updateDB(s);
-
-
-
-
-
-                } catch (
-                        Exception e
-                        )
+                    String s = "";
+                    while((s = bufferedReader.readLine()) != null)
+                    {
+                        s = bufferedReader.readLine();
+                        updateDiscount(s);
+                        MyDataBase dataBase = new MyDataBase(getBaseContext());
+                        dataBase.updateDB(s);
+                    }
+                } catch (Exception e)
                 {
                     Log.e(debuggingString, e.getMessage());
                 }
@@ -79,10 +70,10 @@ public class MainActivity extends Activity  implements View.OnClickListener {
 
         }.start();
     }
-
     public void updateDiscount(String text){
+        String[] message = text.split("#");
         Intent intent = new Intent(this, MyIntentService.class);
-        intent.putExtra(MyIntentService.EXTRA_MESSAGE, text);
+        intent.putExtra(MyIntentService.EXTRA_MESSAGE, message[0] + " " + message[1]);
         startService(intent);
     }
 
@@ -105,10 +96,16 @@ public class MainActivity extends Activity  implements View.OnClickListener {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public void onBackPressed(){
+        if(getFragmentManager().popBackStackImmediate()){
+            getFragmentManager().popBackStack();
+        }
+        else
+            super.onBackPressed();
+    }
 
     @Override
     public void onClick(View v) {
@@ -125,5 +122,4 @@ public class MainActivity extends Activity  implements View.OnClickListener {
                 break;
         }
     }
-
 }
